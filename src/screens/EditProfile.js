@@ -33,7 +33,11 @@ const EditProfile = ({navigation}) => {
   const [inputs, setInputData] = useState({
     Name: User.username,
     phone: User.contact,
+    email: User.email,
+    address: User.address,
   });
+  const [password, setPassword] = useState('');
+
   const [Pvisible, setPvisible] = useState(false);
   const [errors, setErrors] = useState({});
   const [Loading, setLoading] = useState(false);
@@ -44,6 +48,13 @@ const EditProfile = ({navigation}) => {
     Keyboard.dismiss();
     let isValid = true;
     setErrors({});
+    if (!inputs.email) {
+      handleError('Please input email', 'email');
+      isValid = false;
+    } else if (!inputs.email.match(/\S+@\S+\.\S+/)) {
+      handleError('Please input a valid email', 'email');
+      isValid = false;
+    }
 
     if (!inputs.Name) {
       handleError('Please input fullname', 'Name');
@@ -51,6 +62,17 @@ const EditProfile = ({navigation}) => {
     }
     if (!inputs.phone) {
       handleError('Please input Phone', 'phone');
+      isValid = false;
+    }
+    if (!inputs.address) {
+      handleError('Please input address', 'address');
+      isValid = false;
+    }
+    if (!password) {
+      handleError('Please input password', 'password');
+      isValid = false;
+    } else if (password.length < 7) {
+      handleError('Min password length of 8', 'password');
       isValid = false;
     }
 
@@ -71,7 +93,16 @@ const EditProfile = ({navigation}) => {
 
   async function EditProfile() {
     setLoading(true);
-    await ProfileUpdate({username: inputs.Name, contact: inputs.phone}, token);
+    await ProfileUpdate(
+      {
+        username: inputs.Name,
+        contact: inputs.phone,
+        email: inputs.email,
+        address: inputs.address,
+        password,
+      },
+      token,
+    );
     setLoading(false);
   }
 
@@ -198,6 +229,13 @@ const EditProfile = ({navigation}) => {
             Holder={inputs.Name}
             error={errors.Name}
           />
+          <FloatingTextInput
+            label={inputs.email}
+            icon={'mail-outline'}
+            TextValue={value => ChangeValue(value, 'email')}
+            Holder={inputs.email}
+            error={errors.email}
+          />
 
           <FloatingTextInput
             label={inputs.phone}
@@ -208,6 +246,23 @@ const EditProfile = ({navigation}) => {
             error={errors.phone}
           />
 
+          <FloatingTextInput
+            label={inputs.address}
+            icon={'home-outline'}
+            TextValue={value => ChangeValue(value, 'address')}
+            Holder={inputs.address}
+            error={errors.address}
+          />
+          <FloatingTextInput
+            label={'Password'}
+            TextValue={value => setPassword(value)}
+            Holder={password}
+            // IconColor={'black'}
+            secure={Pvisible ? false : true}
+            Endicon={Pvisible ? 'eye-off-outline' : 'eye-outline'}
+            EndPress={() => (Pvisible ? setPvisible(false) : setPvisible(true))}
+            error={errors.password}
+          />
           {/* profile  ------------------ */}
           <TouchableOpacity
             style={{

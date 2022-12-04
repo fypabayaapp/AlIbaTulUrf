@@ -12,8 +12,6 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
-import Ionicon from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import {AuthContext} from '../../../Context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FloatingTextInput from '../../../components/FloatingTextInput';
